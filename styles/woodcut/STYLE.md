@@ -39,7 +39,7 @@ Not copperplate engraving (no swelling burin lines on white, no crosshatch built
 
 ## 4. Type & subtitles
 
-- **Captions are letterpress in the paper margin**, below the plate, like a plate caption in a woodcut novel. They never cover the image. A letterpress old-style face (IM Fell English, OFL) around 40–44 px, in ink, pushed through the same print shader. The ink comes up in 0.1 s with no slide and fades over 0.15 s. Hold ≥ max(1.8 s, speech + 0.6 s).
+- **Captions are letterpress in the paper margin**, below the plate, like a plate caption in a woodcut novel. They never cover the image. A letterpress old-style face (IM Fell English, OFL) around 40–44 px, in ink, pushed through the same print shader. The ink comes up in 0.1 s with no slide and fades over 0.15 s. Hold ≥ max(1.8 s, speech + 0.6 s). The bundled `core/fonts/` IM Fell English is Latin-only (no ğ/Ş/ş/İ etc.) -- for Turkish or another extended-Latin language, fetch your own subset per TECHNIQUE.md §11 instead of using it as is.
 - **Titles are carved, not typed**: cut into the block (IM Fell English SC), mirrored if the block is shown before the print is pulled.
 - Any closing text is a fresh print: letterpress in the margin or carved out of a black panel.
 

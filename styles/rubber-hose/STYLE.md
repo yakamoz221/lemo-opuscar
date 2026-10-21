@@ -31,7 +31,7 @@ Not a 1950s flat cartoon (no limited animation, no colour, no graphic background
 
 ## 4. Type & subtitles
 
-- **Subtitles are a period title card**: a small near-black plate with a white double-rule border and dot-and-ring corner ornaments; text in **IM Fell English SC** (~36 px), paper white. Drawn in the scene layer so it weaves and flickers with the film; pops on and off with no fades. Bottom by default, top when the action is low. One card may span two short voice clips; hold ≥ max(1.8 s, speech + 0.6 s).
+- **Subtitles are a period title card**: a small near-black plate with a white double-rule border and dot-and-ring corner ornaments; text in **IM Fell English SC** (~36 px), paper white. Drawn in the scene layer so it weaves and flickers with the film; pops on and off with no fades. Bottom by default, top when the action is low. One card may span two short voice clips; hold ≥ max(1.8 s, speech + 0.6 s). The bundled `core/fonts/` IM Fell English is Latin-only (no ğ/Ş/ş/İ etc.) -- for Turkish or another extended-Latin language, fetch your own subset per TECHNIQUE.md §11 instead of using it as is.
 - **Titles**: **Shrikhand** fat retro script, white face, heavy ink outline (~14 % of the cap height), ink drop shadow down-right; letters can hop in a travelling wave on the beat. Sub-lines in **Limelight** caps.
 
 ## 5. Motion quality

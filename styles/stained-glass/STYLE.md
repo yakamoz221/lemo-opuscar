@@ -44,7 +44,7 @@ floor   = flagstones × (ambient + projected colour-patch map, blurred + halo)  
 
 ## 4. Type & subtitles
 
-- **Subtitles**: a parchment **banderole** near the bottom (curled ends, gentle sag, thin rule), IM Fell English ~44 px in dark ink. It unfurls from the centre; text fades in only once it is ≥ 75 % open; pad the ribbon well past the text. Hold ≥ max(1.8 s, speech + 0.6 s).
+- **Subtitles**: a parchment **banderole** near the bottom (curled ends, gentle sag, thin rule), IM Fell English ~44 px in dark ink. It unfurls from the centre; text fades in only once it is ≥ 75 % open; pad the ribbon well past the text. Hold ≥ max(1.8 s, speech + 0.6 s). The bundled `core/fonts/` IM Fell English is Latin-only (no ğ/Ş/ş/İ etc.) -- for Turkish or another extended-Latin language, fetch your own subset per TECHNIQUE.md §11 instead of using it as is.
 - **Titles**: incised Roman capitals (Cinzel 600) in the stone, dark cut, light lower lip, gilding, revealed by a moving band of light; small lines ≥ 30 px on screen. In the glass, text only as grisaille on a white-glass scroll.
 
 ## 5. Motion quality

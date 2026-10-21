@@ -62,7 +62,7 @@ All four page tools take `--size WxH` (default `1920x1080`, even numbers) and `-
 | `core/lib.js` | seeded random `mulberry`, `hash`, `vnoise`, `clamp(x,a,b)`, `lerp(a,b,t)`, `seg(t,a,b)` (0→1 between a and b), easing on 0–1 (`ss(t)`, `eio(t)`, `eo(t)`, `ei(t)`, `back(t,s)`, `spring(t,k,z)`), `monotone`/`track` interpolation, envelope `env` |
 | `core/three/post.js` | three.js post: physical depth of field, GTAO, bloom, colour grade, 2× supersampling |
 | `core/post/crt.js` | WebGL2 CRT / VHS pass over a 2D canvas |
-| `core/fonts/` | Fredoka, Lilita One, IM Fell English, ZCOOL KuaiLe (OFL, [`fonts/OFL.md`](fonts/OFL.md)) as subsets; ZCOOL holds only ≈ 200 characters |
+| `core/fonts/` | Fredoka, Lilita One, IM Fell English, ZCOOL KuaiLe (OFL, [`fonts/OFL.md`](fonts/OFL.md)) as subsets; ZCOOL holds only ≈ 200 characters; IM Fell English's subset is Latin-only (no Latin Extended-A), so Turkish/Czech/Polish/Vietnamese etc. need their own fetch -- see TECHNIQUE.md §11 |
 | `core/assets/polyhaven/` | CC0 HDRIs and models (`SOURCES.md`) |
 
 ## Environment variables

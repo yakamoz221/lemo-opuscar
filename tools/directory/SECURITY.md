@@ -6,7 +6,7 @@ Please don't open a public issue for a security problem. Report it privately: on
 
 ## What counts
 
-- Your files, your topic or your film leaving your computer, other than the narration text sent to Microsoft's speech service after you agreed to Chinese online voices.
+- Your files, your topic or your film leaving your computer, other than the narration text sent to Microsoft's speech service after you agreed to an online voice (`core/tts/tts_zh.py` -- Chinese, Turkish or any other language it covers; agreement is required whichever language is spoken, not only Chinese).
 - Something downloaded that the README doesn't list, or from somewhere else.
 - Files written or deleted outside your project folder and the library folder (`~/.lemo-opuscar`), or a way for someone to run commands on your computer through the plugin.
 
