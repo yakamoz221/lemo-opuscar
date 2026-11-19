@@ -1,6 +1,8 @@
 # HANDOFF — YZ Bülteni (yapay zekânın tarihi, dikey 2 dk)
 
-Durum (19 Kasım 2026): görüntü, müzik/efekt miksi, gerçekler ve görseller hazır. Eksik olan tek şey seslendirme.
+Durum (19 Kasım 2026, akşam): **FİLM TAMAM.** `yz-bulteni.mp4` (1080×1920, 24 fps, 2:12, −14 LUFS) ve `yz-bulteni.srt` üretildi; MP4 depoya konmadı (48 MB), aynı komutlarla yeniden üretilir.
+
+Son oturumda yapılanlar: 18 ElevenLabs kaydı indirildi (`vo/v*.wav`, `vo/dur.json`, toplam 87,9 sn konuşma). Gerçek süreler tahminden kısa çıktığı için 6 damga okuma süresini karşılamıyordu; `main.js` PLAN'ında turing/dart/winter/go/scale/chatgpt kuyrukları uzatıldı (`tools/tl.py` eşitlendi), readcheck temiz. Whisper kontrolü yapılamadı (Hugging Face oturumda kapalıydı); yerine satır başına konuşma hızı ve iç duraklama kontrolü yapıldı, hepsi normal. ffmpeg 7+ için pypi'deki `imageio-ffmpeg` paketinin içindeki ffmpeg 9 kullanıldı (`PATH=/opt/ff7:$PATH`).
 
 ## Neler hazır
 - Stil: Broadcast News Package (`styles/news-package`), 1080×1920, 24 fps, Türkçe.

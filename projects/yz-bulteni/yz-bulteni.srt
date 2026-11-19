@@ -1,0 +1,71 @@
+1
+00:00:01,800 --> 00:00:04,150
+Yapay zekânın 72 yılı, beş haberde.
+
+2
+00:00:07,150 --> 00:00:10,330
+Hikâye, oda büyüklüğündeki bilgisayarlarla başlıyor.
+
+3
+00:00:11,650 --> 00:00:16,990
+Ekim 1950. Alan Turing, Mind dergisinde bir makale yayımlıyor.
+
+4
+00:00:18,800 --> 00:00:21,570
+İlk cümlesi bir soru: Makineler düşünebilir mi?
+
+5
+00:00:25,200 --> 00:00:31,490
+1955'te dört bilim insanı bir yaz çalışması öneriyor ve alana adını veriyor: yapay zekâ.
+
+6
+00:00:34,700 --> 00:00:39,850
+1973'te İngiltere'deki Lighthill raporu, alanı sert biçimde eleştiriyor.
+
+7
+00:00:40,250 --> 00:00:45,000
+Üniversitelerde destek büyük ölçüde kesiliyor; bu döneme yapay zekâ kışı deniyor.
+
+8
+00:00:47,650 --> 00:00:55,500
+Mayıs 1997, New York. IBM'in Deep Blue'su, dünya şampiyonu Kasparov'un karşısında.
+
+9
+00:00:56,650 --> 00:01:01,160
+Bir yıl önce kazanan Kasparov, bu kez maçı 2,5'e 3,5 kaybediyor.
+
+10
+00:01:01,560 --> 00:01:06,410
+Bir bilgisayar, turnuva koşullarında ilk kez görevdeki bir dünya şampiyonunu yeniyor.
+
+11
+00:01:08,150 --> 00:01:13,150
+Mart 2016, Seul: AlphaGo, Go ustası Lee Sedol'u 4-1 yeniyor.
+
+12
+00:01:16,200 --> 00:01:22,100
+Makineler görmeyi de öğreniyor. ImageNet yarışmasında hata, 2010'da yüzde 28.
+
+13
+00:01:22,500 --> 00:01:27,310
+2012'de Toronto'dan bir sinir ağı, hatayı yüzde 16'ya indiriyor.
+
+14
+00:01:27,710 --> 00:01:34,140
+2015'te ise çizgi, eğitimli bir insan uzmanın yüzde 5,1'lik hatasının altına iniyor.
+
+15
+00:01:37,150 --> 00:01:42,100
+Haziran 2017: Google araştırmacıları Transformer mimarisini yayımlıyor.
+
+16
+00:01:43,650 --> 00:01:50,080
+Modeller büyüyor: AlexNet'te 60 milyon parametre vardı, GPT-3'te 175 milyar.
+
+17
+00:01:53,650 --> 00:01:58,590
+Ve 30 Kasım 2022'de OpenAI, ChatGPT'yi herkese açıyor.
+
+18
+00:02:01,700 --> 00:02:04,120
+Bir sorudan bir sohbete: 72 yıl.
