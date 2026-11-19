@@ -1,0 +1,20 @@
+[
+ {"id": "v1", "text": "Yapay zekânın 72 yılı, beş haberde.", "say": "Yapay zekânın yetmiş iki yılı, beş haberde."},
+ {"id": "v2", "text": "Hikâye, oda büyüklüğündeki bilgisayarlarla başlıyor.", "say": "Hikâye, oda büyüklüğündeki bilgisayarlarla başlıyor."},
+ {"id": "v3", "text": "Ekim 1950. Alan Turing, Mind dergisinde bir makale yayımlıyor.", "say": "Ekim bin dokuz yüz elli. Alan Turing, Maynd dergisinde bir makale yayımlıyor."},
+ {"id": "v4", "text": "İlk cümlesi bir soru: Makineler düşünebilir mi?", "say": "İlk cümlesi bir soru: Makineler düşünebilir mi?"},
+ {"id": "v5", "text": "1955'te dört bilim insanı bir yaz çalışması öneriyor ve alana adını veriyor: yapay zekâ.", "say": "Bin dokuz yüz elli beşte dört bilim insanı bir yaz çalışması öneriyor ve alana adını veriyor: yapay zekâ."},
+ {"id": "v6", "text": "1973'te İngiltere'deki Lighthill raporu, alanı sert biçimde eleştiriyor.", "say": "Bin dokuz yüz yetmiş üçte İngiltere'deki Laythil raporu, alanı sert biçimde eleştiriyor."},
+ {"id": "v7", "text": "Üniversitelerde destek büyük ölçüde kesiliyor; bu döneme yapay zekâ kışı deniyor.", "say": "Üniversitelerde destek büyük ölçüde kesiliyor; bu döneme yapay zekâ kışı deniyor."},
+ {"id": "v8", "text": "Mayıs 1997, New York. IBM'in Deep Blue'su, dünya şampiyonu Kasparov'un karşısında.", "say": "Mayıs bin dokuz yüz doksan yedi, Nü York. Ay Bi Em'in Dip Blu'su, dünya şampiyonu Kasparov'un karşısında."},
+ {"id": "v9", "text": "Bir yıl önce kazanan Kasparov, bu kez maçı 2,5'e 3,5 kaybediyor.", "say": "Bir yıl önce kazanan Kasparov, bu kez maçı iki buçuğa üç buçukla kaybediyor."},
+ {"id": "v10", "text": "Bir bilgisayar, turnuva koşullarında ilk kez görevdeki bir dünya şampiyonunu yeniyor.", "say": "Bir bilgisayar, turnuva koşullarında ilk kez görevdeki bir dünya şampiyonunu yeniyor."},
+ {"id": "v11", "text": "Mart 2016, Seul: AlphaGo, Go ustası Lee Sedol'u 4-1 yeniyor.", "say": "Mart iki bin on altı, Seul: Alfa Go, Go ustası Li Sedol'u dörde bir yeniyor."},
+ {"id": "v12", "text": "Makineler görmeyi de öğreniyor. ImageNet yarışmasında hata, 2010'da yüzde 28.", "say": "Makineler görmeyi de öğreniyor. İmeyc Net yarışmasında hata, iki bin onda yüzde yirmi sekiz."},
+ {"id": "v13", "text": "2012'de Toronto'dan bir sinir ağı, hatayı yüzde 16'ya indiriyor.", "say": "İki bin on ikide Toronto'dan bir sinir ağı, hatayı yüzde on altıya indiriyor."},
+ {"id": "v14", "text": "2015'te ise çizgi, eğitimli bir insan uzmanın yüzde 5,1'lik hatasının altına iniyor.", "say": "İki bin on beşte ise çizgi, eğitimli bir insan uzmanın yüzde beş virgül birlik hatasının altına iniyor."},
+ {"id": "v15", "text": "Haziran 2017: Google araştırmacıları Transformer mimarisini yayımlıyor.", "say": "Haziran iki bin on yedi: Gugıl araştırmacıları Transformır mimarisini yayımlıyor."},
+ {"id": "v16", "text": "Modeller büyüyor: AlexNet'te 60 milyon parametre vardı, GPT-3'te 175 milyar.", "say": "Modeller büyüyor: Aleks Net'te altmış milyon parametre vardı, Ci Pi Ti üçte yüz yetmiş beş milyar."},
+ {"id": "v17", "text": "Ve 30 Kasım 2022'de OpenAI, ChatGPT'yi herkese açıyor.", "say": "Ve otuz Kasım iki bin yirmi ikide Opın Ey Ay, Çet Ci Pi Ti'yi herkese açıyor."},
+ {"id": "v18", "text": "Bir sorudan bir sohbete: 72 yıl.", "say": "Bir sorudan bir sohbete: yetmiş iki yıl."}
+]
