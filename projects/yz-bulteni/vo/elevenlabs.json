@@ -1,0 +1,26 @@
+{
+ "voice": {"id": "ZQ0JSSMiFTCBZbnAMKMN", "name": "Adil - Clear & Confident Turkish News"},
+ "model": "eleven_multilingual_v2",
+ "flow_id": "gIziuszsDsZ6vCz8dCwN",
+ "note": "One take per line. Fresh signed mp3 URLs: ElevenLabs MCP creative_get_generations(flow_id, generation_ids). Download host: elevenlabsusercontent.com (must be on the session allowlist).",
+ "takes": {
+  "v1":  {"node": "zYMDmIfaddk6uG69GOv8", "gen": "RcpYhrxbPVqQw5DtZRps"},
+  "v2":  {"node": "nHMszcZyXiiwLBn3y7NS", "gen": "I92PhWsIywDs8sr7OvKJ"},
+  "v3":  {"node": "wLTqmQbfBOtk6q79eXbr", "gen": "ReG0lMN2vWbW4vXeIThv"},
+  "v4":  {"node": "joegBeF5qt8P1VsWFlRT", "gen": "7lmsBvt57Vibk3mhNqWv"},
+  "v5":  {"node": "yuuHEZlXgkwK7qQSJQM9", "gen": "kAdEU1Qc3wIJyGWAaGmY"},
+  "v6":  {"node": "lcL4a0f5zCBgYv15nxSJ", "gen": "lRMSn5VD2UAc6IrDCspJ"},
+  "v7":  {"node": "XsxCAYUYz6eFGbiMaody", "gen": "p9QOolIHtS7Z1KorXBrm"},
+  "v8":  {"node": "vN8y3hvb0nTler9Rj59C", "gen": "HBmZMKkLgRvywJD5o0yx"},
+  "v9":  {"node": "Q4o5zH4uNk37Le42UMPc", "gen": "dPDpKRVe8806bi1PjXh2"},
+  "v10": {"node": "PzVnTnA8ZySZA9hys8qr", "gen": "Jw1pxaf3jrnfBCalRYft"},
+  "v11": {"node": "hzLgny2rbNSH3cZV15hA", "gen": "6Ns5Yb4paPnxqgWrLQFW"},
+  "v12": {"node": "KRODcgCkJXlNYQo7ofUD", "gen": "JYx29IS8sErkHsHqS4yM"},
+  "v13": {"node": "O8NnNyw6fIJdSba1eZul", "gen": "WLVRQYDCCZs9SVWWKfQO"},
+  "v14": {"node": "klEluzSmVBcEnQ4wSqIr", "gen": "bPTxjtPBKPzJmiPcN2H6"},
+  "v15": {"node": "tgYhaUw3mWLfX6Nh0nAF", "gen": "vL9Zkw0JVTZATR7Tr5HW"},
+  "v16": {"node": "y5LKlYhpuV9xWG25zIYM", "gen": "lA6E831wlHLj5nDZdRVW"},
+  "v17": {"node": "iPYLzvIA80JPE3pj60wi", "gen": "uqGLeqGk6rPgMntOjU4p"},
+  "v18": {"node": "rxwV3objZgSQ7x6C4DC5", "gen": "pas4aTPHnRsKV3AkCgKP"}
+ }
+}

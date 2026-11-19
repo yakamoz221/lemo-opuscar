@@ -11,8 +11,12 @@ Durum (19 Kasım 2026): görüntü, müzik/efekt miksi, gerçekler ve görseller
 - `tools/prep.py`: görselleri duotone'a çevirir. `tools/tl.py`: zaman çizelgesini yazdırır.
 
 ## Kalan adımlar
-1. **Ses (ElevenLabs, kullanıcının seçimi):** her satırın `say` metnini bir Türkçe erkek haber sesiyle `vo/<id>.wav` olarak üret (multilingual model). Microsoft edge-tts ve Higgsfield kullanılmayacak (kullanıcı ElevenLabs istedi). Kapanış kartındaki "Ses:" satırını kullanılan sese göre güncelle (`main.js`, `shotEnd` → `CR[4]`).
-2. `vo/dur.json` yaz: `{ "v1": saniye, ... }` (trim edilmiş wav süreleri). Toplam film ~2 dk olmalı; uzun gelirse hızı biraz artır.
+1. **Ses — ÜRETİLDİ (19 Kasım):** 18 satır ElevenLabs'te "Adil – Clear & Confident Turkish News" sesiyle, `eleven_multilingual_v2`, satır başına tek take. Hangi satırın hangi üretim olduğu `vo/elevenlabs.json`'da. Kapanış kartındaki "Ses:" satırı güncellendi.
+   **Engel:** mp3'ler `elevenlabsusercontent.com` üzerinden iniyor; bu alan adı oturumun ağ izin listesinde olmalı (claude.ai → Ayarlar → Yetenekler). İzin verilince:
+   - `creative_get_generations` ile (flow `gIziuszsDsZ6vCz8dCwN`, en fazla 4 id/çağrı) imzalı URL'leri al, `vo/urls.json` olarak yaz: `{ "v1": "<url>", ... }`
+   - `python3 tools/fetch_vo.py vo/urls.json` → `vo/<id>.wav` (kırpılmış, 48 kHz mono) + `vo/dur.json`.
+   Yeniden üretme: kredi harcar, gerek yok.
+2. `vo/dur.json` toplamı ~2 dk filme sığmalı; uzun gelirse `atempo` ile hafif hızlandır.
 3. `core/tts/asr_check.py vo/lines.json vo --lang tr` (gerekirse satırlara `asr` alanı).
 4. Kütüphane kökünden (`$LIB`):
    - `node core/render/events.mjs <proje> --size 1080x1920`

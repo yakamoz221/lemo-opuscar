@@ -602,7 +602,7 @@ function shotEnd(t) {
     'Russakovsky vd. (2015) · He vd. (2015) · arXiv 1706.03762 · CACM · OpenAI',
     'Fotoğraflar, Wikimedia Commons: ENIAC (ABD Ordusu), A. Turing, Pleiades (NASA) — kamu malı;',
     'Go taşları: Gary Todd (CC0) · Deep Blue: James the photographer (CC BY 2.0)',
-    'Ses: Microsoft Azure Neural TTS (tr-TR-AhmetNeural) · Müzik örnekleri: VSCO 2 CE, VCSL (CC0)',
+    'Ses: ElevenLabs (Adil, eleven_multilingual_v2) · Müzik örnekleri: VSCO 2 CE, VCSL (CC0)',
     'Yazı tipleri: Barlow Condensed, IBM Plex Mono (OFL)'];
   CR.forEach((s, i) => text(s, x, 1214 + i * 36, F.b6(24), i === 3 ? C.paper : C.grey, 'left', .3, 'ecr' + i, i !== 3));
   ctx.restore();
