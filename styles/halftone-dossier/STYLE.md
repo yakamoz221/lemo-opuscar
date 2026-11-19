@@ -10,7 +10,7 @@
 - **Bureaucratic apparatus**: case numbers, file chips, numbered exhibits, height charts, name plates, stamps. Their seriousness is the frame; the subject can be grave or trivial.
 - **Loud but readable**: one idea per 2–4 s card, one big headline, one visual gag or exhibit, one caption line.
 
-Not Risograph (no grainy two-ink riso texture as the whole look, no zine collage), not Swiss motion (no grid-driven kinetic type on white), not Game Show Flat (no candy sets, no rhythm-game rounds). Dots, paper and stamps must be visible in every frame.
+Not Risograph (no grainy two-ink riso texture as the whole look, no zine collage), not Swiss motion (no grid-driven kinetic type on white), not Rhythm Game Show (no candy sets, no rhythm-game rounds). Dots, paper and stamps must be visible in every frame.
 
 ## 2. Materials & rendering
 
@@ -107,7 +107,7 @@ Everything lives in `demo/index.html`: helpers (`el`, `txt`, `tf`, `seg`, easing
 
 ## 11. Variation space
 
-You decide what the file is about, its counts or exhibits, the characters (or none), the inks within the colour logic, the tone (farce or grave), the opening, the ending and the length (30 s for three exhibits, ~60 s for five).
+You decide what the file is about, its counts or exhibits, the characters (or none), the inks within the colour logic, the tone (farce or grave), the opening, the ending and the length (it grows with the number of exhibits; each needs time to be read).
 
 All far from our demo:
 

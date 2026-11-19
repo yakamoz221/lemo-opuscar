@@ -1,8 +1,10 @@
 """Maintainer tool: keep git small, put films and large assets on GitHub Releases.
 
   python3 tools/release.py check [--strict] [slug ...]
-                                what git would commit: fails on big files, local paths, secrets and incomplete styles.
-                                Warnings (missing web cut, broken still links…) fail only with --strict, which also checks
+                                what git would commit: fails on big files, local paths, secrets and incomplete styles, and on README
+                                pictures that are missing, named by no README, or heavier than 4 MB to open (docs/readme/).
+                                Warnings (missing web cut, broken still links, images nothing names, demo files nothing
+                                leads to, process wording such as PRODUCTION_LOG) fail only with --strict, which also checks
                                 the style format (style.json, STYLE.md, DEMO.md, no sign-off in STYLE.md). Slugs limit
                                 the per-style checks to those styles: the gate for a new style is `check --strict <slug>`.
   python3 tools/release.py pack      build the asset packs in .release/ and write tools/assets.json (their size and sha256)
@@ -149,6 +151,133 @@ def completeness(have, bad, warn, slugs):
                 else: warn.append(f'{slug}: {doc} points to demo/stills/{ref}, which git would not commit (add `!{path}` to .gitignore)')
 
 
+# Clutter and internal notes a commit should not carry. All three are warnings (failures with --strict) and lean towards
+# silence: a file that might be loaded counts as used.
+IMAGE = re.compile(r'\.(?:jpe?g|png|webp|gif)$', re.I)
+CONVENTION_FILES = ('poster.jpg', 'demo/stills/styleframe.jpg')        # used by the gallery build without being named
+REF_TEXT = re.compile(r'\.(?:md|js|mjs|cjs|ts|py|sh|html|json|css|txt|srt)$|(?:^|/)(?:CREDITS|FACTS)$', re.I)
+STYLE_ENTRIES = CONVENTION_FILES + ('STYLE.md', 'DEMO.md', 'style.json', 'demo/build.sh', 'demo/build.py', 'demo/index.html',
+                                    'demo/CREDITS')
+# kept by name: licences, notes on sources, package manifests (files named in core/, which its tools write, are kept too)
+KEEP_NAME = re.compile(r'(?i)^(?:OFL|LICEN[CS]E|COPYING|NOTICE|README|SOURCES|CREDITS|FACTS)|[_-](?:OFL|LICEN[CS]E)\b|^__init__\.py$|^\.gitignore$|^package(?:-lock)?\.json$|^requirements[\w.-]*\.txt$|^pyproject\.toml$')
+CODE = re.compile(r'\.(?:js|mjs|cjs|ts|py)$')
+NAME_TOKEN = re.compile(r'(?<![\w.-])[\w-]+(?:\.[\w-]+)+')
+WORD_TOKEN = re.compile(r'[\w-]+')
+# a folder named as a prefix (`scenes/` before a quote, `${`, `*`, a `+` or the end of a line): globs, readdir and dynamic imports
+DIR_END = re.compile(r'''/(?=[\s'"`)$*{,\]]|$|\s*['"`]?\s*\+)''', re.M)
+DIR_NAME = re.compile(r'([\w.-]+)$')
+WILD_TOKEN = re.compile(r'''(?<![^\s'"`(),;:=|])[^\s'"`(),;:=|]*?\.(?:jpe?g|png|webp|gif|m?js|cjs|py|json|txt|svg|wav|mp3|srt|css|html)\b''', re.I)
+PLACEHOLDER = re.compile(r'\$\{[^}]*\}|\{[^}]*\}|<[^>]*>|%0?\d*d|\[[^\]]*\]|\*+|\?')    # alt_*, alt_<n>, alt_{n}, alt_${n}, alt_%03d, alt_[0-9]
+# internal process wording that belongs in local notes, not in the library (add words here)
+PROCESS_WORDS = ('PRODUCTION_LOG', '返修', '定稿版', '定稿片', '审片', '用户说', '用户选', r'v[0-9] 的意见', '(?i:reviewer note)',
+                 'LemoOpuscarTrial', r'lemomo\.studio')
+PROCESS = re.compile('|'.join(PROCESS_WORDS))
+PROCESS_EXEMPT = re.compile(r'(?:^|/)\.gitignore$|^MAINTAINING\.md$|^tools/release\.py$')   # files that state the rules
+CONTACT = re.compile(r'\blemomo\.studio@gmail\.com\b')   # the business address the READMEs and LICENSE publish on purpose
+CONTACT_OK = re.compile(r'^(?:README(?:\.zh-CN)?\.md|LICENSE|tools/directory/README\.md)$')
+
+
+def text_index(t):
+    """what a text can point at: names with a dot (`foo.js`), bare words (`foo`, imports without the extension), folders named
+    as a prefix, and file-name patterns (`alt_*.jpg`, `frame_${i}.png`, `still_%03d.jpg`) as regexes."""
+    dirs = set()
+    for m in DIR_END.finditer(t):
+        d = DIR_NAME.search(t, max(0, m.start() - 80), m.start())
+        if d and d.group(1).strip('.'): dirs.add(d.group(1).strip('.'))
+    pats = []
+    for tok in WILD_TOKEN.findall(t):
+        parts = PLACEHOLDER.split(tok.rsplit('/', 1)[-1])
+        if len(parts) > 1 and len(''.join(parts).strip('.')) >= 4:
+            pats.append(re.compile('.*'.join(re.escape(p) for p in parts) + '$', re.I))
+    return set(NAME_TOKEN.findall(t)), set(WORD_TOKEN.findall(t)), dirs, pats
+
+
+def hygiene(files, slugs, warn):
+    """Images nothing names, demo files no entry reaches, and process wording, in what git would commit."""
+    texts, index = {}, {}
+    for f in files:
+        if BINARY.search(f): continue
+        try: texts[f] = open(os.path.join(ROOT, f), encoding='utf-8').read()
+        except (UnicodeDecodeError, OSError): pass
+    def idx(f):
+        if f not in index: index[f] = text_index(texts[f])
+        return index[f]
+    chosen = tuple(f'styles/{s}/' for s in slugs)
+    # 1. images under styles/ that no committed text names, by file name or by a pattern
+    refs = [idx(f) for f in texts if REF_TEXT.search(f)]
+    names = set().union(*(r[0] for r in refs))
+    pats = [p for r in refs for p in r[3]]
+    orphans = set()
+    for f in files:
+        if not (f.startswith(chosen) and IMAGE.search(f)) or f.split('/', 2)[2] in CONVENTION_FILES: continue
+        b = os.path.basename(f)
+        if b not in names and not any(p.match(b) for p in pats):
+            orphans.add(f); warn.append(f'{f}: no committed doc or code names this image (by name or pattern): delete it or link it')
+    # 2. files of a style that nothing reaches from its entries (by name, import, folder prefix or pattern)
+    paths = {m.rstrip('.') for t in texts.values() for m in re.findall(r'styles/[\w./-]+', t)}
+    folders = tuple({p.rstrip('/') + '/' for p in paths if p.rstrip('/').count('/') >= 3})   # styles/<slug>/demo/<folder>, not demo/ itself
+    made = {n for f, t in texts.items() if f.startswith('core/') for n in idx(f)[0]}  # what core tools write (events.json, words.json)
+    for slug in slugs:
+        pre = f'styles/{slug}/'
+        own = [f for f in files if f.startswith(pre)]
+        reach = {f for f in own if f[len(pre):] in STYLE_ENTRIES + (f'{slug}.srt',) or KEEP_NAME.search(os.path.basename(f))
+                 or os.path.basename(f) in made or f in paths or f.startswith(folders)}
+        todo = list(reach)
+        while todo:
+            g = todo.pop()
+            if g not in texts: continue
+            n, words, dirs, ps = idx(g)
+            for f in own:
+                if f in reach: continue
+                b, below = os.path.basename(f), os.path.dirname(f)[len(pre):].split('/')[1:]   # folders below demo/
+                if b in n or (CODE.search(b) and os.path.splitext(b)[0] in words) or dirs.intersection(below) or any(p.match(b) for p in ps):
+                    reach.add(f); todo.append(f)
+        for f in sorted(set(own) - reach - orphans):
+            warn.append(f'{f}: nothing in {slug} leads to this file (STYLE.md, DEMO.md, build.sh, index.html and what they load): delete it or link it')
+    # 3. process wording
+    for f, t in sorted(texts.items()):
+        if PROCESS_EXEMPT.search(f): continue
+        for i, line in enumerate(t.splitlines(), 1):
+            m = PROCESS.search(CONTACT.sub('', line) if CONTACT_OK.search(f) else line)
+            if m: warn.append(f'{f}:{i}: process wording "{m.group(0)}" (internal notes stay local)')
+
+
+# The README's pictures (styleboard/art/readme.mjs draws them into docs/readme/): every picture a README names is there,
+# docs/readme/ holds nothing no README names, and opening a README stays light. GitHub loads every picture of a README at once.
+README_BUDGET = 4_500_000     # bytes a reader downloads to open README.md or README.zh-CN.md (both themes' pictures load: ≈ 4.05 MB on 2026-11-17)
+README_OUTSIDE = 100_000      # the badges, Trendshift and star-history pictures, counted as a fixed amount (≈ 70 KB on 2026-11-07)
+PICTURE = re.compile(r'<picture>(.*?)</picture>', re.S)
+THEMED = re.compile(r'<source media="\(prefers-color-scheme: (dark|light)\)" srcset="([^"]+)"')
+IMG_SRC = re.compile(r'<img\s[^>]*?\bsrc="([^"]+)"')
+
+
+def readme_pictures(bad):
+    named, notes = set(), []
+    for fn in ('README.md', 'README.zh-CN.md'):
+        p = os.path.join(ROOT, fn)
+        if not os.path.exists(p): continue
+        t = open(p, encoding='utf-8').read()
+        local = lambda u: not re.match(r'[a-z]+:', u)
+        named |= {u for u in IMG_SRC.findall(t) + [u for _, u in THEMED.findall(t)] if local(u)}
+        for theme in ('light', 'dark'):
+            got = []   # what a reader in this theme downloads: the source a <picture> picks, else its <img>; and every plain <img>, the other
+                       # theme's included (GitHub hides a link ending in #gh-dark-mode-only or #gh-light-mode-only, but its picture still loads)
+            rest = PICTURE.sub(lambda m: got.append(next((u for th, u in THEMED.findall(m.group(1)) if th == theme), None)
+                                                    or IMG_SRC.search(m.group(1)).group(1)) or '', t)
+            got += IMG_SRC.findall(rest)
+            size = README_OUTSIDE + sum(os.path.getsize(os.path.join(ROOT, u)) for u in set(got) if local(u) and os.path.isfile(os.path.join(ROOT, u)))
+            notes.append(f'{fn} {theme} {size / 1e6:.2f} MB')
+            if size > README_BUDGET: bad.append(f'{fn} weighs {size / 1e6:.2f} MB to open in the {theme} theme (budget {README_BUDGET / 1e6:.0f} MB): lighter pictures in styleboard/art/readme.mjs')
+    for u in sorted(named):
+        if not os.path.isfile(os.path.join(ROOT, u)): bad.append(f'README names {u}, which is not there (node styleboard/art/readme.mjs)')
+    pics = os.path.join(ROOT, 'docs', 'readme')
+    for d, _, fs in os.walk(pics):
+        for f in fs:
+            rel = os.path.relpath(os.path.join(d, f), ROOT).replace(os.sep, '/')
+            if rel != 'docs/readme/manifest.json' and rel not in named: bad.append(f'{rel}: no README names this picture (a full run of styleboard/art/readme.mjs clears them)')
+    return notes
+
+
 def check():
     args = [a for a in sys.argv[2:] if not a.startswith('--')]
     strict = '--strict' in sys.argv
@@ -167,6 +296,8 @@ def check():
             if SECRET.search(b): bad.append(f'possible secret: {f}')
     print(f'git would hold {len(files)} files, {size / 1e6:.0f} MB')
     completeness(have, bad, warn, [s for s in style_slugs() if not args or s in args])
+    print('README pictures: ' + ', '.join(readme_pictures(bad)))
+    hygiene(files, [s for s in style_slugs() if not args or s in args], warn)
     if strict:
         style_format([s for s in style_slugs() if not args or s in args], bad)
         bad += [f'(--strict) {w}' for w in warn]; warn = []
@@ -247,7 +378,7 @@ def upload():
     todo = plan()
     blocked = [w for t, p, w in todo if p is None]
     if blocked: sys.exit('✗ nothing uploaded; first fix:\n  ' + '\n  '.join(blocked))
-    for tag, title in (('assets', 'Assets (fetched by tools/fetch.sh)'), ('films', 'Films (full quality)'), ('web', 'Web cuts (720p, copied into the gallery)')):
+    for tag, title in (('assets', 'Assets (fetched by tools/fetch.sh)'), ('films', 'Films (full quality)'), ('web', 'Web cuts (720p)')):
         if gh('release', 'view', tag, check=False).returncode:
             gh('release', 'create', tag, '--title', title, '--notes', 'Rolling release, updated by tools/publish.sh.', '--latest=false')
     for tag, path, why in sorted(todo, key=lambda x: x[0] == 'assets'):   # films first: the gallery streams them

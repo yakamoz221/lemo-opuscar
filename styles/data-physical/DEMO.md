@@ -4,7 +4,7 @@ One example among many. Don't reuse its story, arc, shots, props or timings.
 
 Demo: *Two Spirals* 《两条螺旋》 (39.4 s) · `data-physical.mp4` · source in [`demo/`](demo/)
 
-Twelve years of global wind and solar capacity (IRENA 2026, via Our World in Data, CC BY 4.0), built as two spirals of real plates on a walnut dial: one plate is 10 GW for both, aluminium for solar, teal acrylic for wind, a brass plate every 100 GW. Chinese on screen, English narration, bilingual subtitles (Chinese line above, English line below).
+Twelve years of global wind and solar capacity (IRENA 2026, via Our World in Data, CC BY 4.0), built as two spirals of real plates on a walnut dial: one plate is 10 GW for both, aluminium for solar, teal acrylic for wind, a brass plate every 100 GW. Chinese on screen, English narration, bilingual subtitles (Chinese line above, English line below). This is an unofficial film made from published data; IRENA and Our World in Data did not make or endorse it.
 
 ## Story & structure
 
@@ -73,10 +73,10 @@ demo/
   mix.py            score, material foley, voice, suck-outs, mix and master → out/mix.wav, out/stems/
   tools/            export.mjs (voice lines, timeline.json, cues), fonts.mjs (OFL subsets), srt.mjs, subcheck.mjs, holdcheck.py
   data/             the downloaded CSVs and metadata
-  FACTS.md, CREDITS, TREATMENT.md, PRODUCTION_LOG.md, stills/styleframe.jpg
+  FACTS.md, CREDITS, stills/styleframe.jpg
 ```
 
 - Needs `setup.sh deps voice` (Kokoro and faster-whisper; the Whisper `small.en` model downloads on the first check). `build.sh` fetches what git doesn't hold, only when missing: the studio HDRI (`sh tools/fetch.sh hdri`, 12 MB), the Kokoro model (`fetch.sh voice`), the sample libraries `vsco2ce`, `vcsl`, `freepats` (`fetch.sh instruments <lib>`, ~1 GB together), and the font subsets (`tools/fonts.mjs` from the Google Fonts CSS2 API, OFL: Noto Sans SC, Noto Serif SC, Inter, JetBrains Mono) whenever a `.woff2` named in `fonts.css` is missing. The walnut veneer textures are in git (`core/assets/polyhaven/`), the data CSVs in `demo/data/`.
 - `sh demo/build.sh` takes about 7 minutes on Apple silicon; the picture (945 frames, 2× supersampled, acrylic transmission) is ~55 s with 3 workers, the speech check most of the rest.
 - Checks it runs: `asr_check.py` (small.en, 7/7), subtitle single-line widths with the real fonts (widest 836 px against 1100 px), `readcheck.mjs` (all pass), `holdcheck.py` (2014 pair held 2.77 s, 2020/2021 held 2.67 s before their verdicts).
-- Demo-specific pitfalls: aluminium and clear acrylic first read as the same white plates, so the acrylic got a teal tint and attenuation and the aluminium full metalness; long warm shadows turned the far aluminium brown until the two cool rims were added; the 2014 and 2020/2021 reading columns collided with the verdict plate until they were kept below y = 430; the 2025 stack sat behind the subtitle strip until the crane's target was dropped below the top; the top-view puck engraving reads upright only with yaw π/2 + 0.30 for this camera.
+- Demo-specific pitfalls: aluminium and clear acrylic read as the same white plates unless the acrylic gets a teal tint and attenuation and the aluminium full metalness; long warm shadows turn the far aluminium brown without the two cool rims; keep the 2014 and 2020/2021 reading columns below y = 430, or they collide with the verdict plate; drop the crane's target below the top of the 2025 stack, or the stack sits behind the subtitle strip; the top-view puck engraving reads upright only with yaw π/2 + 0.30 for this camera.

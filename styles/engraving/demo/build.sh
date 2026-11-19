@@ -2,6 +2,7 @@
 # Rebuild "The Honeybee, Plate VII" from scratch: sh styles/engraving/demo/build.sh [content.json]
 # Swap in your own content: write a JSON like content.json and pass its name (it must live in this demo folder).
 set -e
+sh "$(dirname "$0")/tools/fonts.sh"   # fonts: not in git (CREDITS names them) → fonts/
 cd "$(dirname "$0")/../../.."
 PY=.venv/bin/python; D=styles/engraving/demo; O=styles/engraving; C=${1:-content.json}
 # 1. voice lines from the content file → Kokoro (bm_fable, en-gb) → whisper check
@@ -17,7 +18,7 @@ $PY $D/tools/cuecheck.py
 # 4. subtitles
 $PY $D/tools/subs.py $C && $PY core/render/srt.py $D/out/subs.json $O/engraving.srt
 # 5. frames (through the batch render gate when it exists) → mux at −14 LUFS with grain 4
-G=""   # 整机渲染限流已在 core/render/video.mjs 里
+G=""   # machine-wide render throttling already lives in core/render/video.mjs
 $G node core/render/video.mjs $D --fps 24 --workers 2 --q "content=$C" --out $D/out/video.mp4
 sh core/render/mux.sh $D/out/video.mp4 $D/mix.wav $O/engraving.mp4 24 4
 # 6. stills

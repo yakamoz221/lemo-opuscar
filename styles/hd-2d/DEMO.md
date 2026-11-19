@@ -1,8 +1,8 @@
-# HD-2D — our demo
+# 2.5D Pixel Art — our demo
 
 One example among many. Don't reuse its story, arc, shots, props or timings.
 
-Demo: *The Lampbearer* (76.5 s, 1920×1080, 60 fps) · `hd-2d.mp4` (the **tilt-shift cut**) · source in [`demo/`](demo/) (local only) · engine: three.js r170 scenes + procedural pixel textures + custom physical DOF / tilt-shift post (`demo/post_ts.js`) + Canvas2D overlay UI, rendered frame-by-frame with `core/render/video.mjs`.
+Demo: *The Lampbearer* (76.5 s, 1920×1080, 60 fps) · `hd-2d.mp4` (the **tilt-shift cut**) · source in [`demo/`](demo/) · engine: three.js r170 scenes + procedural pixel textures + custom physical DOF / tilt-shift post (`demo/post_ts.js`) + Canvas2D overlay UI, rendered frame-by-frame with `core/render/video.mjs`.
 
 
 ## Story & structure
@@ -19,9 +19,9 @@ How the demo spent the style's native powers:
 | **Sprite shadows** | The first lighting (brazier taper → lantern) happens on screen, next to two characters, so both shadows jump onto the planks. |
 | **Tilt-shift** | Extra-wide establishing shots with the focus band on a single tiny subject (the lighthouse, a boat). |
 
-**Our story shape:** cold chapter card → wide establishing shot where the landmark light **fails** → quest handed over in a dialogue box (the light is passed) → travel through a darker biome (forest) → the ordeal (storm; the light almost dies; the music drops out) → the light survives → the landmark is relit (climax on a music downbeat) → the opening set, transformed → title and tagline.
+**Story shape:** cold chapter card → wide establishing shot where the landmark light **fails** → quest handed over in a dialogue box (the light is passed) → travel through a darker biome (forest) → the ordeal (storm; the light almost dies; the music drops out) → the light survives → the landmark is relit (climax on a music downbeat) → the opening set, transformed → title and tagline.
 
-We kept it to 6 shots, one set per 1–2 shots, 7 narrated lines + 1 dialogue line. The "one small light" was a lantern; in another film it could be a first commit, a seed, a letter, a signal — or no carried light at all.
+The demo has 6 shots, one set per 1–2 shots, 7 narrated lines + 1 dialogue line. The "one small light" is a lantern; in another film it could be a first commit, a seed, a letter, a signal — or no carried light at all.
 
 ## Shots
 
@@ -74,8 +74,7 @@ Motion as built:
 - **Dialogue box** (for a character who speaks on screen, instead of a subtitle): 1180×210 px, bottom-centred, navy gradient `rgba(14,18,34,.86) → rgba(6,8,18,.9)`, 2 px gold border `rgba(214,190,130,.9)` + inner 1 px line, gold diamond corners; name plate (Cormorant 600 34 px) overlapping the top-left edge; body Cormorant 500 44 px, **typed out over 92 % of the voice duration**; blinking gold ▼ caret when done; slides up 14 px on entry. A soft chime marks it.
 - **Chapter card** (0–5.5 s): radial navy background `#11172a → #020308`, `CHAPTER  I` (Cinzel 500 34 px, 10 px tracking, `#d8c28e`) over a gold ornament line with diamond, then the chapter name in Cormorant italic 78 px with a warm glow; one pixel ember drifts across.
 - **Title** (67.4–76.4 s): screen dimmed 50 %, `THE LAMPBEARER` in Cinzel 700 118 px, 14 px tracking, vertical gold gradient `#fff3cf → #e2c27c → #a8803e` with glow; ornament; tagline in Cormorant italic 50 px; music/voice credit at the bottom (24 px, 75 % alpha).
-- **End credit line (library rule)**: every film ends with **"LemoLab × Claude Opus 5.5"**. In the demo it is part of the title card (`ui.js` `title()`, on by default): Cinzel 500 30 px, `#d8c28e` at 85 % alpha, 4 px tracking, centred at y = 668, fading in 70.6–71.6 s, between the tagline and the music credit, which it does not replace. `?nocredit=1` hides it (reproduces the pre-sign-off `hd-2d_v1.mp4`). Draw it the same way in a new film.
-- **End credit line (this library's demo only)**: our demo ends with **"LemoLab × Claude Opus 5.5"**. It is part of the title card (`ui.js` `title()`, on by default): Cinzel 500 30 px, `#d8c28e` at 85 % alpha, 4 px tracking, centred at y = 668, fading in 70.6–71.6 s, between the tagline and the music credit, which it does not replace. `?nocredit=1` hides it (reproduces the pre-sign-off `hd-2d_v1.mp4`). This sign-off belongs to this library's demo only; a user's film carries no LemoLab credit and no copy of this card — when you adapt `ui.js`, delete the credit line.
+- **End credit line (this library's demo only)**: our demo ends with **"LemoLab × Claude Opus 5.5"**. It is part of the title card (`ui.js` `title()`, on by default): Cinzel 500 30 px, `#d8c28e` at 85 % alpha, 4 px tracking, centred at y = 668, fading in 70.6–71.6 s, between the tagline and the music credit, which it does not replace. `?nocredit=1` hides it. This sign-off belongs to this library's demo only; a user's film carries no LemoLab credit and no copy of this card — when you adapt `ui.js`, delete the credit line.
 - Export the `.srt` from the same data (`tools/srt.py`: story.js `VO` + `voices/dur.json`, +0.5 s hold, dialogue prefixed `OLD KEEPER:`).
 
 
@@ -123,7 +122,7 @@ $PY $D/tools/srt.py
 node core/render/still.mjs $D 8 16.9 30.5 42.8 53.8 62 71 --q tilt=1 --out $D/out/review
 
 # 6. render the TILT-SHIFT CUT (the version in the library): 4590 frames at 60 fps
-#    measured 26–37 fps with 2 workers (≈2.5 min); the shipped file used 6 workers
+#    26–37 fps with 2 workers (≈2.5 min)
 node core/render/video.mjs $D --fps 60 --workers 2 --q tilt=1 --out $D/out/video_tilt.mp4
 
 # 7. mux: loudnorm −14 LUFS, grain 0 (pixel art: no film grain)
@@ -132,7 +131,7 @@ sh core/render/mux.sh $D/out/video_tilt.mp4 $D/mix.wav styles/hd-2d/hd-2d.mp4 60
 
 `?tilt=1` is what makes the tilt-shift cut: it is a **render-time post effect** inside `post_ts.js` (not a second pass over a finished video). Without it you get the plain DOF version. Other page switches: `ss=1` (no supersampling, faster previews), `only=harbor|forest|cliff` (build one set), `nobloom`, `nodof`, `noglow`, `nocredit=1` (hide the end credit line).
 
-**Partial re-render** (e.g. after changing the title card; this is how the end credit was added to the shipped film): render only the tail and splice it onto the existing `out/video_tilt.mp4` (frames 0–4019 are untouched by title-card changes), then mux again. Back up the current film first (`hd-2d_v1.mp4`). Audio is untouched (same `mix.wav` → bit-identical decoded audio).
+**Partial re-render** (e.g. after changing the title card): render only the tail and splice it onto the existing `out/video_tilt.mp4` (frames 0–4019 are untouched by title-card changes), then mux again. Back up the current film first (`hd-2d_v1.mp4`). Audio is untouched (same `mix.wav` → bit-identical decoded audio).
 ```sh
 node $D/tools/render_range.mjs 67 76.5 --workers 2 --q tilt=1 --out $D/out/tail.mp4          # 570 frames ≈ 15 s
 ffmpeg -y -i $D/out/video_tilt.mp4 -i $D/out/tail.mp4 -filter_complex \
@@ -143,14 +142,14 @@ sh core/render/mux.sh $D/out/video_tilt_new.mp4 $D/mix.wav styles/hd-2d/hd-2d.mp
 
 When you change the story: edit `story.js` first, then copy the voice start times into `vo_times.json` (mix.py reads that file, not story.js), keep `sfx_events.json` footsteps in step with the sets' walk frames, and move the cue constants at the top of `music/edit.py` (`T_CAESURA`, `T_SILENCE`, `T_HIT`, `NARRATION`).
 
-Pitfalls as we hit them, with the demo's props and numbers:
+Pitfalls, with the demo's props and numbers:
 
 - **Checkerboard everywhere**: a wide dither band on ramps. Keep `dz` ≈ .22 on sprites, ≈ .45 on textures.
 - **The lantern blows out the sprite**: a point light sitting on the billboard plane saturates it. Put the light **0.42–0.45 m from the lantern toward the camera** (`lp + toCam * .45`), and in the forest cap sprite lighting in the shader (`outgoingLight = min(outgoingLight, diffuseColor.rgb * 1.35 + emissive)` via `onBeforeCompile`).
 - **Lights behind a billboard don't light it** (it only has a front normal). Always add a cool front fill light ~2 m in front of the hero.
-- **Cylinder light beams facing the camera produced NaN**; bloom spread them into large black blocks. Use `beamCard` (an axis-aligned billboard strip that fades as it turns toward the camera) and let the glow sprite take over (`face` factor enlarges the lighthouse glow).
+- **Cylinder light beams facing the camera produce NaN**; bloom spreads them into large black blocks. Use `beamCard` (an axis-aligned billboard strip that fades as it turns toward the camera) and let the glow sprite take over (`face` factor enlarges the lighthouse glow).
 - **Sea reflection column division by zero**: clamp the width with `max(.35, …)`.
-- **Storm too dark to read** in the first pass. Add a "readability" fill outside the story-dark beat: hemisphere +1.0, sun +1.3, sky +.35 (the `ext` term in `cliff.js`), i.e. roughly ×2–2.5 on environment mid-tones, and let it drop to nothing only during the flame-almost-out beat.
+- **Storm too dark to read.** Add a "readability" fill outside the story-dark beat: hemisphere +1.0, sun +1.3, sky +.35 (the `ext` term in `cliff.js`), i.e. roughly ×2–2.5 on environment mid-tones, and let it drop to nothing only during the flame-almost-out beat.
 - **Distant ship glows hidden by fog/geometry**: `depthTest = false` + `renderOrder 5` on those glow sprites.
 - **Tilt-shift on shots with no character**: the tracker has nothing to follow; use fixed band heights per shot (`TILT_C`).
 - **Tilt-shift and occlusion**: the tilt blur is folded into the same signed CoC as depth DOF (above the band = far, below = near) so the gather keeps the "far can't bleed over sharp near" rule; don't add it as a separate blur pass.

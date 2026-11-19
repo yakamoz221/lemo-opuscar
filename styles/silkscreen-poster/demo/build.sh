@@ -1,17 +1,53 @@
 #!/bin/sh
-# 从零重现《Three Trails》：sh styles/silkscreen-poster/demo/build.sh（任意目录运行）
-# 换内容：改 demo/content.json（或 CONTENT=content_alt.json）后重跑本脚本。无旁白，不需要 TTS。
+# One command: THE LONG WAY HOME 绕远路回家 (Silkscreen Travel Poster demo), 50 s, 1920×1080, 24 fps
+#   sh demo/build.sh            fonts if missing, voice if missing + speech check, subtitles, events, score, mix, picture, master,
+#                               readcheck, poster and the gallery style frame
+#   VOICE=1 sh demo/build.sh    regenerate the narration before the check
+#   WORKERS=3 sh demo/build.sh  more render workers (default 2)
+#   sh demo/build.sh 28 36      only a span of the film (film seconds) → demo/out/film-28-36.mp4
+# Needs the voice tier (Kokoro model, faster-whisper) and the FreePats, Karoryfer, VCSL and VSCO 2 CE sample libraries:
+#   sh plugin/skills/lemo-opuscar/scripts/setup.sh deps voice
+#   sh tools/fetch.sh instruments freepats; sh tools/fetch.sh instruments karoryfer; sh tools/fetch.sh instruments vcsl; sh tools/fetch.sh instruments vsco2ce
 set -e
-cd "$(dirname "$0")/../../.."
-PY=.venv/bin/python; D=styles/silkscreen-poster/demo; O=styles/silkscreen-poster
-Q=""; [ -n "$CONTENT" ] && Q="content=$CONTENT"
-node $D/tools/timeline.mjs $CONTENT                                   # 1. 打印时间线（由 content.json 推出）
-node core/render/events.mjs $D                                        # 2. 画面事件 → events.json（默认 content.json）
-$PY $D/music/compose.py                                               # 3. 配乐 → music/score.wav + stems
-$PY $D/mix.py                                                         # 4. 环境 + 拟音 + 配乐让路 → mix.wav
-$PY $D/tools/cuecheck.py                                              # 5. 卡点自检
-G=""   # 整机渲染限流已在 core/render/video.mjs 里
-$G node core/render/video.mjs $D --fps 24 --workers 2 ${Q:+--q $Q} --out $D/out/video24.mp4   # 6. 逐帧渲染（限流器）
-sh core/render/mux.sh $D/out/video24.mp4 $D/mix.wav $O/silkscreen-poster.mp4 24 3                                   # 7. −14 LUFS，颗粒 3
-node core/render/still.mjs $D 33 --out $D/out/still --prefix sf_ && cp $D/out/still/sf_33.jpg $D/stills/styleframe.jpg && cp $D/out/still/sf_33.jpg $O/poster.jpg
-node core/render/still.mjs $D 2.5 19.2 30.5 39.5 --q content=content_alt.json --prefix alt_ --out $D/out/alt       # 8. 换内容静帧
+HERE=$(cd "$(dirname "$0")" && pwd)                  # .../styles/silkscreen-poster/demo
+FILM=$(cd "$HERE/.." && pwd)                          # .../styles/silkscreen-poster
+LIB=${LIB:-$(cd "$HERE/../../.." && pwd)}             # library root
+export LIB
+[ -f "$LIB/core/render/video.mjs" ] || { echo "set LIB to the library folder"; exit 1; }
+PY=${PY:-"$LIB/.venv/bin/python"}
+NAME=silkscreen-poster
+WORKERS=${WORKERS:-2}
+A=${1:-0}; B=${2:-50}
+cd "$LIB"
+mkdir -p "$HERE/out/voice" "$HERE/stills"
+sh "$HERE/tools/fetch_fonts.sh"
+
+# narration: Kokoro bf_emma, one clip per line; every clip must pass the speech-to-text check
+if [ "${VOICE:-0}" = "1" ] || [ ! -f "$HERE/out/voice/L10.wav" ]; then
+  "$PY" core/tts/tts.py "$HERE/voice/lines.json" "$HERE/out/voice"
+fi
+"$PY" core/tts/asr_check.py "$HERE/voice/lines.json" "$HERE/out/voice" --lang en
+
+if [ "$A" != 0 ] || [ "$B" != 50 ]; then                                     # a span, for checking a part of the film
+  "$PY" "$HERE/tools/cues.py" "$A" "$B" "$HERE/out/film-$A-$B.srt"
+  node core/render/events.mjs "$HERE"
+  "$PY" "$HERE/music/compose.py"
+  "$PY" "$HERE/mix.py" "$A" "$B"
+  node core/render/video.mjs "$HERE" --q "a=$A&b=$B" --fps 24 --workers "$WORKERS" --out "$HERE/out/video-$A-$B.mp4"
+  sh core/render/mux.sh "$HERE/out/video-$A-$B.mp4" "$HERE/out/mix.wav" "$HERE/out/film-$A-$B.mp4" 24 2
+  echo "done: $HERE/out/film-$A-$B.mp4"; exit 0
+fi
+
+"$PY" "$HERE/tools/cues.py"                                                  # voice/cues.json + ../silkscreen-poster.srt
+node core/render/events.mjs "$HERE"                                           # → events.json (film times)
+"$PY" "$HERE/music/compose.py"                                               # → music/score.wav
+"$PY" "$HERE/mix.py"                                                         # → out/mix.wav
+node core/render/video.mjs "$HERE" --fps 24 --workers "$WORKERS" --out "$HERE/out/video.mp4"
+sh core/render/mux.sh "$HERE/out/video.mp4" "$HERE/out/mix.wav" "$FILM/$NAME.mp4" 24 2
+
+# checks, poster and the gallery style frame (Beijing at night, without subtitles)
+node core/render/readcheck.mjs "$HERE" > "$HERE/out/readcheck.txt" && echo "readcheck ok" || { grep -v '^OK' "$HERE/out/readcheck.txt" | tail -8; }
+node core/render/still.mjs "$HERE" 44.5 --q nocap=1 --out "$HERE/out/poster" > /dev/null
+ffmpeg -v error -y -i "$HERE/out/poster/t_44.5.jpg" -q:v 3 "$FILM/poster.jpg"
+cp "$FILM/poster.jpg" "$HERE/stills/styleframe.jpg"
+echo "done: $FILM/$NAME.mp4"

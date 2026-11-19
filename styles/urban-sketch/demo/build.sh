@@ -1,6 +1,7 @@
 #!/bin/sh
-# 从零重建《Where the Wind Went》：声音线索 → 配乐 → 拟音 → 混音 → 逐帧渲染 → 合成
+# Rebuild "Where the Wind Went" from scratch: sound cues → score → foley → mix → frame-by-frame render → mux
 set -e
+sh "$(dirname "$0")/tools/fonts.sh"   # fonts: not in git (CREDITS names them) → fonts/
 cd "$(dirname "$0")/../../.."
 D=styles/urban-sketch/demo
 node core/render/events.mjs $D

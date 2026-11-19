@@ -27,11 +27,12 @@ Kokoro (`core/tts/tts.py`, çevrimdışı) Türkçe'yi hiç desteklemiyor — o 
 - **Fredoka, Lilita One**: hem `latin` hem `latin-ext` alt kümesi var → ğ (U+011F), Ş/ş (U+015E/U+015F), İ (U+0130) dahil, Türkçe sorunsuz render olur.
 - **IM Fell English**: sadece `latin` alt kümesi var (Latin Extended-A YOK) → ğ, Ş, ş, İ eksik. Bu harfler geçen bir Türkçe kelime o harfleri kaybeder veya altyazı ortasında tarayıcının varsayılan fontuna düşer.
 
-IM Fell English'i gerçek altyazı/caption metni için kullanan 3 stil düzeltildi (her birinin "## 4. Type & subtitles" bölümüne bir not eklendi):
+IM Fell English'i gerçek altyazı/caption metni için kullanan 4 stil düzeltildi (her birinin "## 4. Type & subtitles" bölümüne bir not eklendi):
 
 - `styles/stained-glass/STYLE.md`
 - `styles/rubber-hose/STYLE.md`
 - `styles/woodcut/STYLE.md`
+- `styles/gilded-illumination/STYLE.md` (2.0.0 ile gelen yeni stil; notu altyazı satırına eklendi)
 
 (`paper-popup` stilinde IM Fell English sadece örnek bir seçenek olarak geçiyor — gerçek altyazılar Fredoka kullanıyor, o yüzden dokunmadım.)
 

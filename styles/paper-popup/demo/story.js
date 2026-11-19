@@ -1,7 +1,7 @@
-// 故事时间轴：旁白、气泡、章节横幅（秒）
+// Story timeline: narration, bubbles, chapter banners (seconds)
 export const DUR = 133.0;
 
-// 旁白：[id, 开始, 英文, 中文]；时长在 voices/dur.json
+// Narration: [id, start, English, Chinese]; durations are in voices/dur.json
 export const VO = [
   ['v01', 1.6, 'On a quiet desk, in a quiet room, sat a book that nobody had opened in a very long time.', '安静的书桌上，安静的房间里，有一本很久很久没人翻开的书。'],
   ['v02', 8.3, 'Until one evening… somebody did.', '直到某个傍晚……有人翻开了它。'],
@@ -20,7 +20,23 @@ export const VO = [
   ['v15', 124.5, 'The end? Or maybe… just the beginning.', '结束了？也许……才刚刚开始。'],
 ];
 
-// 角色气泡：[谁, 开始, 结束, 英文, 中文]
+// Narration subtitle parts. A line too wide for one English subtitle line (hud.js wraps at 1720 px) is shown in parts, one
+// English line each, switched in the pause between two words (word times from faster-whisper on voices/vNN.wav, see words.py):
+// id -> [[offset from the line's start (s), English, Chinese], ...]; the first part starts at 0, the last one ends with the voice
+export const VO_SPLIT = {
+  v04: [[0, 'Pip loved Papervale. The cardboard hills. The paper sun on its wooden stick.', '皮普喜欢纸片谷：硬纸板的山丘，插在木棍上的纸太阳，'],
+        [5.23, 'And the river, that went swish… swish… swish.', '还有那条哗啦、哗啦、哗啦的小河。']],         // "stick." ends 4.92, "And" 5.38
+  v05: [[0, 'But every evening, when the sun went down, another light came on.', '可每到傍晚太阳落下，另一盏灯就会亮起。'],
+        [3.95, 'A big, warm light, from somewhere beyond the edge of the page.', '又大又暖的光，从书页边缘之外的某个地方照进来。']],   // "on." ends 3.82, "A" 4.48
+};
+// Narration subtitle cues for hud.js drawSubs and make_srt.mjs: [{id, t0, t1, en, zh, first, last}];
+// t1 = when the next part takes over, or the end of the voice (t0 + dur) for a line's last part
+export const voCues = dur => VO.flatMap(([id, t0, en, zh]) => {
+  const parts = VO_SPLIT[id] || [[0, en, zh]], end = t0 + (dur[id] || 3);
+  return parts.map(([o, e, z], k) => ({ id, t0: t0 + o, t1: k + 1 < parts.length ? t0 + parts[k + 1][0] : end, en: e, zh: z, first: k === 0, last: k + 1 === parts.length }));
+});
+
+// Character bubbles: [who, start, end, English, Chinese]
 export const BUB = [
   ['pip', 22.4, 25.4, 'Good morning, Papervale!', '早上好，纸片谷！'],
   ['pip', 45.2, 48.5, "I'm going to find out where it comes from!", '我要去找到它从哪里来！'],
@@ -44,6 +60,6 @@ export const CREDITS = [
   '音乐：Kevin MacLeod · 场景素材：Poly Haven · 配音：Kokoro',
 ];
 
-// 书的机关时间
-export const OPEN = [10.0, 12.6];                                  // 封面翻开
-export const TURNS = [[48.6, 51.4], [71.6, 74.4], [86.8, 89.6]];   // 三次翻页
+// Book mechanism timings
+export const OPEN = [10.0, 12.6];                                  // cover opens
+export const TURNS = [[48.6, 51.4], [71.6, 74.4], [86.8, 89.6]];   // three page turns

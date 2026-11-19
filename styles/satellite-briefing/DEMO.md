@@ -4,7 +4,7 @@ One example among many. Don't reuse its story, arc, shots, props or timings.
 
 Demo: *The Map Still Says Sea* 《地图上还写着海》 (37.8 s) · `satellite-briefing.mp4` · source in [`demo/`](demo/)
 
-A satellite follows the map to a sea and finds a desert; the only part that came back is the part someone dammed. The Aral Sea, 1977–2025, on public-domain Landsat imagery. Chinese on screen, English narration, bilingual subtitles (Chinese line above, English line below).
+A satellite follows the map to a sea and finds a desert; the only part that came back is the part someone dammed. The Aral Sea, 1977–2025, on public-domain Landsat imagery. Chinese on screen, English narration, bilingual subtitles (Chinese line above, English line below). This is an unofficial film made from public-domain imagery; the U.S. Geological Survey and NASA did not make or endorse it.
 
 ## Story & structure
 
@@ -82,11 +82,11 @@ demo/
   tools/            fetch_landsat.py, fetch_gibs.py, plates.py, bmng.py, vectors.py, mapfield.py, growth.py, fonts.py (data); lowcheck.py (sub-bass share);
                     export.mjs, voicefix.py (voice); cuecheck.py, subcheck.mjs, motioncheck.py, audiocheck.py, impactcheck.py, finalasr.py (checks)
   assets/           plates/ (JPEG plates, water masks, mapfield.png, ko_grow.png, plates.json), vectors.json, raw/ (downloads + manifest.jsonl)
-  FACTS.md, CREDITS, TREATMENT.md, PRODUCTION_LOG.md, stills/styleframe.jpg
+  FACTS.md, CREDITS, stills/styleframe.jpg
 ```
 
 - `sh demo/build.sh` takes about 2 minutes on Apple silicon (the picture renders in ~20 s with 3 workers). In a fresh clone the plates, raw scenes and fonts are not in git: the first run fetches and rebuilds the imagery (~25 minutes, ~3.5 GB in `assets/raw/`) and downloads the fonts (`tools/fonts.py`: Barlow Condensed and IBM Plex Mono from github.com/google/fonts, Noto SC subsets); `FETCH=1` forces it again. The score needs `sh tools/fetch.sh instruments <lib>` for vsco2ce, vcsl and freepats, the voice `setup.sh deps voice`.
 - Checks it runs: `asr_check.py` with `small.en` (the base model hears "sea" as "C"), cue grid, subtitle single-line widths measured with the real fonts (widest line 578 px against 1100 px), `readcheck.mjs`, motion per second (no stretch over 1 s below 0.6 mean pixel change; the slowest second of the film is 1.06), the impact ranking.
 - Plates: region mosaics 3917 × 2652 at ~190 m for six years; detail plates at ~32–40 m for the landing, Muynak and Kok-Aral; Blue Marble world (4096 × 2048) and Central Asia. All sampled in one shader pass; memory about 1 GB of textures per render worker.
-- Demo-specific pitfalls: the 1977 Landsat 2 mosaic needs nearest-neighbour resampling, dropout-row repair, streak cleaning at 12° on land and one L1GS scene to close a hole in the north-west bay; the 1989 scene of path 161 on 16 August carries a dust plume across the sea and is excluded (`exclude` in `tools/plates_spec.json`); a dike-bounded polder 10–15 km west of Muynak has a straight edge that can read as a seam: it is dimmed while the port is centred and slides out of frame before the range line; the water masks need contour pieces along plate borders removed or a straight line appears in the North Aral; the map's place names other than 咸海 were dropped because a dive gives them less than the reading time they need.
+- Demo-specific pitfalls: the 1977 Landsat 2 mosaic needs nearest-neighbour resampling, dropout-row repair, streak cleaning at 12° on land and one L1GS scene to close a hole in the north-west bay; the 1989 scene of path 161 on 16 August carries a dust plume across the sea and is excluded (`exclude` in `tools/plates_spec.json`); a dike-bounded polder 10–15 km west of Muynak has a straight edge that can read as a seam: it is dimmed while the port is centred and slides out of frame before the range line; the water masks need contour pieces along plate borders removed or a straight line appears in the North Aral; the map carries no place names other than 咸海, because a dive gives them less than the reading time they need.
 - Kokoro adds a breathy syllable after "Someone kept it."; `tools/voicefix.py` trims it before the speech check.

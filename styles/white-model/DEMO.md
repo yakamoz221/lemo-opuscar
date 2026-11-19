@@ -1,10 +1,10 @@
-# Projection on White Model — our demo
+# Projection-Mapped Model — our demo
 
 One example among many. Don't reuse its story, arc, shots, props or timings.
 
 Demo: *How a Flattened City Grew Back* 《被炸平的城市怎样长回来》 (40.0 s) · `white-model.mp4` · source in [`demo/`](demo/)
 
-Rotterdam's centre as a 1:1000 white model (2.3 × 2.6 km: 3,887 buildings, 8,860 roof parts, 108 bridge decks). Chinese on screen, English narration, bilingual subtitles (Chinese line above, English line below).
+Rotterdam's centre as a 1:1000 white model (2.3 × 2.6 km: 3,887 buildings, 8,860 roof parts, 108 bridge decks). Chinese on screen, English narration, bilingual subtitles (Chinese line above, English line below). This is an unofficial film made from open data (3DBAG, Kadaster BAG, BGT); 3DGI, TU Delft, Kadaster and the City of Rotterdam did not make or endorse it.
 
 ## Story & structure
 
@@ -62,7 +62,7 @@ Mix (`demo/mix.py`): music balanced to sit 10 dB under the voice while it speaks
 
 ## End card
 
-Over the white model as the house lights return, a left block: 被炸平的城市怎样长回来 (Noto Sans SC 500, 64 px), *How a Flattened City Grew Back* (Inter Tight 200), an amber rule, `白模投影 · PROJECTION ON WHITE MODEL`, `3DBAG · BAG · BGT · 鹿特丹市档案馆`, `LemoLab × Claude Opus 5.5`. 35.7–40.0 s. The "LemoLab × Claude Opus 5.5" sign-off belongs to this library's demo only; a user's film carries no LemoLab credit and no copy of this card.
+Over the white model as the house lights return, a left block: 被炸平的城市怎样长回来 (Noto Sans SC 500, 64 px), *How a Flattened City Grew Back* (Inter Tight 200), an amber rule, `白模投影 · PROJECTION ON WHITE MODEL`, `3DBAG · BAG · BGT · 鹿特丹市档案馆`, the 3DBAG licence credit in fine print (3DGI and the 3D geoinformation research group, TU Delft, CC BY 4.0), `LemoLab × Claude Opus 5.5`. 35.7–40.0 s. The "LemoLab × Claude Opus 5.5" sign-off belongs to this library's demo only; a user's film carries no LemoLab credit and no copy of this card.
 
 ## Build notes
 
@@ -79,7 +79,7 @@ demo/
                  export.mjs (voice/cues); cuecheck.py, subcheck.mjs, motioncheck.py, impactcheck.py, finalasr.py (checks)
   data/          model.json, water.png, zshadow.png, stats.json (generated)
   assets/raw/    3DBAG and BGT downloads (gitignored)
-  FACTS.md, CREDITS, TREATMENT.md, PRODUCTION_LOG.md, stills/styleframe.jpg
+  FACTS.md, CREDITS, stills/styleframe.jpg
 ```
 
 - `sh demo/build.sh` takes about 4 minutes on Apple silicon (picture ~60 s with 4 workers; TTS and the Whisper check most of the rest). `FETCH=1` re-downloads the data (~55 MB).

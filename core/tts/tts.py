@@ -5,7 +5,8 @@ Writes out_dir/<id>.wav (24 kHz, leading/trailing silence trimmed) and out_dir/d
 Model: kokoro-v1.0.onnx / voices-v1.0.bin in this folder; download with sh tools/fetch.sh voice (about 350 MB).
 Path limit: the data folder of espeak-ng (which Kokoro uses to turn text into phonemes) must have a real path, after symlinks, shorter than
          160 bytes (a CJK character counts 3), or it is not found and the error names a path on someone else's machine (the one espeak-ng was
-         built on). A library under a short path such as ~/lemo-opuscar is fine; this script checks before it starts and explains.
+         built on). When the library's own copy is too deep, this script copies that folder once to ~/.cache/lemo-opuscar/espeak-ng-data
+         and uses the copy; only if that path is too long as well does it stop and explain.
 More natural Chinese, Japanese and other voices: core/tts/tts_zh.py (Microsoft edge-tts, online), same interface and output layout.
 """
 import sys, json, os, re
@@ -17,7 +18,7 @@ CJK = re.compile('[぀-ヿ㐀-鿿가-힯豈-﫿]')
 DEFAULT_VOICE = {'cmn': 'zf_xiaoxiao'}
 lines, out = json.load(open(sys.argv[1], encoding='utf-8')), sys.argv[2]
 
-# 先查输入，再加载模型（模型要几秒）
+# check the input first, then load the model (the model takes a few seconds)
 wrong = [L['id'] for L in lines if L.get('lang', 'en-us').lower().startswith('en') and CJK.search(L['text'])]
 if wrong:
     sys.exit(f"tts.py: line(s) {', '.join(map(str, wrong))} contain Chinese/Japanese/Korean text but lang is English, and Kokoro would read them as noise.\n"
@@ -25,15 +26,26 @@ if wrong:
 model, voices = os.path.join(HERE, 'kokoro-v1.0.onnx'), os.path.join(HERE, 'voices-v1.0.bin')
 if not (os.path.exists(model) and os.path.exists(voices)):
     sys.exit(f'tts.py: the Kokoro model is not in {HERE}.\n  install the voice tier: sh plugin/skills/lemo-opuscar/scripts/setup.sh deps voice   (from the library root; it also fetches the model, about 350 MB)')
-ESPEAK_LIMIT = 160   # 实测：espeak-ng 数据目录的真实路径 ≤159 字节能用，≥160 字节找不到 phontab（软链先被解析，量的是真实路径）
+ESPEAK_LIMIT = 160   # measured: the espeak-ng data directory works when its real path is ≤159 bytes; at ≥160 bytes phontab can't be found (symlinks are resolved first, so the real path is what's measured)
 try:
     import espeakng_loader
     espeak_dir = os.path.realpath(espeakng_loader.get_data_path())
 except Exception:
-    espeak_dir = None   # 装的不是 espeakng_loader（比如系统的 espeak-ng）：不检查，让 Kokoro 自己报错
+    espeak_dir = None   # not installed via espeakng_loader (e.g. the system espeak-ng): don't check, let Kokoro report its own error
 if espeak_dir and len(espeak_dir.encode('utf-8')) >= ESPEAK_LIMIT:
-    sys.exit(f"tts.py: this library sits under a folder path that is too long for the offline voice engine (espeak-ng).\n"
-             f"  its data folder is {len(espeak_dir.encode('utf-8'))} bytes long (a Chinese character counts as 3), the limit is {ESPEAK_LIMIT - 1}:\n"
+    # the library sits too deep: use a copy of the data folder under a short path (made once, refreshed when the package changes)
+    import shutil
+    short = os.path.realpath(os.path.join(os.path.expanduser('~'), '.cache', 'lemo-opuscar', 'espeak-ng-data'))
+    if len(short.encode('utf-8')) < ESPEAK_LIMIT:
+        stamp = os.path.join(short, '.source')
+        if not (os.path.isdir(short) and os.path.exists(stamp) and open(stamp).read() == espeak_dir):
+            shutil.rmtree(short, ignore_errors=True); shutil.copytree(espeak_dir, short)
+            open(stamp, 'w').write(espeak_dir)
+        espeakng_loader.get_data_path = lambda: short
+        espeak_dir = short
+if espeak_dir and len(espeak_dir.encode('utf-8')) >= ESPEAK_LIMIT:
+    sys.exit(f"tts.py: this library sits under a folder path that is too long for the offline voice engine (espeak-ng),\n"
+             f"  and so does the short copy under your home folder ({len(espeak_dir.encode('utf-8'))} bytes, a Chinese character counts as 3; the limit is {ESPEAK_LIMIT - 1}):\n"
              f"    {espeak_dir}\n"
              f"  Move the library to a shorter path (e.g. LEMO_OPUSCAR_HOME=~/lemo-opuscar, or a shorter folder for the clone) and run\n"
              f"  `sh plugin/skills/lemo-opuscar/scripts/setup.sh deps` there (a moved .venv does not work). No need to move anything for tts_zh.py.")
@@ -49,8 +61,8 @@ for L in lines:
     lang = L.get('lang', 'en-us')
     a, sr = k.create(L['text'], voice=L.get('voice') or DEFAULT_VOICE.get(lang, 'af_bella'), speed=L.get('speed', .92), lang=lang)
     nz = np.where(np.abs(a) > (np.abs(a).max() if len(a) else 0) * .02)[0]
-    if len(nz): a = a[max(0, nz[0] - int(.03 * sr)): nz[-1] + int(.08 * sr)]   # 去首尾静音；整段几乎无声就原样保留
+    if len(nz): a = a[max(0, nz[0] - int(.03 * sr)): nz[-1] + int(.08 * sr)]   # trim leading/trailing silence; if the whole clip is nearly silent, keep it as is
     else: print('warning: line', L['id'], 'is silent', file=sys.stderr)
-    sf.write(os.path.join(out, L['id'] + '.wav'), a, sr); dur[L['id']] = round(len(a) / sr, 3)
+    sf.write(os.path.join(out, f"{L['id']}.wav"), a, sr); dur[L['id']] = round(len(a) / sr, 3)
     print(L['id'], dur[L['id']], L['text'])
 json.dump(dur, open(os.path.join(out, 'dur.json'), 'w', encoding='utf-8'), indent=1)
